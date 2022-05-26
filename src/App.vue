@@ -3,7 +3,7 @@
   <h1 class="todo-title">투두리스트</h1>
   <TodoForm @add-todo="addTodo"/>
   <strong v-if="!todos.length">You have nothing to do.</strong>
-  <TodoList :todos="todos"/>
+  <TodoList :todos="todos" @toggle-todo="toggleTodo" />
 </div>
 </template>
 
@@ -23,6 +23,10 @@ export default {
       const addTodo = (todo) => {
         todos.value.push(todo)
       }
+      
+      const toggleTodo = (index) => {
+        todos.value[index].completed = !todos.value[index].completed
+      }
 
       const deleteTodo = (index) => {
           todos.value.splice(index, 1);
@@ -30,6 +34,7 @@ export default {
       return {
           todos,
           addTodo,
+          toggleTodo,
           deleteTodo,
       };
   },
@@ -55,10 +60,5 @@ export default {
 
 .card-text {
   cursor: pointer;
-}
-
-.doneTodo {
-  color: lightgrey;
-  text-decoration: line-through;
 }
 </style>
