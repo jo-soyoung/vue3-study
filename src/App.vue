@@ -3,7 +3,8 @@
   <h1 class="todo-title">투두리스트</h1>
   <TodoForm @add-todo="addTodo"/>
   <strong v-if="!todos.length">You have nothing to do.</strong>
-  <TodoList :todos="todos" @toggle-todo="toggleTodo" />
+  <TodoList
+    :todos="todos" @toggle-todo="toggleTodo" @delete-todo="deleteTodo" />
 </div>
 </template>
 
@@ -23,7 +24,7 @@ export default {
       const addTodo = (todo) => {
         todos.value.push(todo)
       }
-      
+
       const toggleTodo = (index) => {
         todos.value[index].completed = !todos.value[index].completed
       }
