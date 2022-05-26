@@ -3,28 +3,19 @@
   <h1 class="todo-title">투두리스트</h1>
   <TodoForm @add-todo="addTodo"/>
   <strong v-if="!todos.length">You have nothing to do.</strong>
-
-  <ul v-for="(t, index) in todos" :key="t.id" class="card mt-2">
-    <li  class="card-body d-flex justify-space-between p-2 flex-grow-1">
-      <label :for="t.id" class="card-text" :class="{doneTodo: t.completed}">
-        <input type="checkbox" class="form-input-check" :id="t.id" v-model="t.completed">
-        {{t.subject}}
-      </label>
-      <div>
-        <button class="btn btn-danger btn-sm" @click="deleteTodo(index)">Delete</button>
-      </div>
-    </li>
-  </ul>
+  <TodoList :todos="todos"/>
 </div>
 </template>
 
 <script>
 import {ref} from 'vue';
 import TodoForm from './components/TodoForm.vue'
+import TodoList from './components/TodoList.vue'
 
 export default {
   components: {
-    TodoForm
+    TodoForm,
+    TodoList
   },
   setup() {
       const todos = ref([]);

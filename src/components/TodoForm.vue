@@ -9,7 +9,6 @@
       </button>
     </div>
   </form>
-
 </template>
 
 <script>
@@ -40,7 +39,6 @@ export default {
             onSubmit,
         }
     }
-
 }
 </script>
 
