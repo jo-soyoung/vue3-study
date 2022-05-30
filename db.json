@@ -1,0 +1,29 @@
+{
+  "todos": [
+    {
+      "subject": "study",
+      "completed": false,
+      "id": 1
+    },
+    {
+      "subject": "eat veggies",
+      "completed": false,
+      "id": 2
+    },
+    {
+      "subject": "exercise",
+      "completed": false,
+      "id": 3
+    },
+    {
+      "subject": "dance",
+      "completed": false,
+      "id": 4
+    },
+    {
+      "subject": "go shopping",
+      "completed": false,
+      "id": 5
+    }
+  ]
+}

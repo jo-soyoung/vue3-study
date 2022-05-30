@@ -1,6 +1,6 @@
 <template>
   <ul v-for="(t, index) in todos" :key="t.id" class="card mt-2">
-    <li  class="card-body d-flex align-center p-2 flex-grow-1">
+    <li class="card-body d-flex align-center p-2">
       <label :for="t.id" class="card-text" :class="{doneTodo: t.completed}">
         <input type="checkbox" class="form-input-check" :id="t.id" :value="t.completed" @change="toggleTodo(index)">
         {{t.subject}}
@@ -42,5 +42,8 @@ export default {
 .doneTodo {
   color: lightgrey;
   text-decoration: line-through;
+}
+.card-body {
+    justify-content: space-between;
 }
 </style>
