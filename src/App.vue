@@ -3,11 +3,28 @@
   <h1 class="todo-title">투두리스트</h1>
   <input type="text" class="form-control" v-model="searchText" placeholder="Seach">
   <hr/>
+
   <TodoForm @add-todo="addTodo"/>
   <strong style="color: red">{{error}}</strong>
   <p v-if="!filteredTodos.length">You have nothing to do.</p>
+
   <TodoList
     :todos="filteredTodos" @toggle-todo="toggleTodo" @delete-todo="deleteTodo" />
+  <hr/>
+
+  <nav aria-label="Page navigation example">
+    <ul class="pagination">
+      <li class="page-item" v-if="currentPage !== 1">
+        <a class="page-link" href="#" @click="getTodos(currentPage - 1)">Previous</a>
+      </li>
+      <li v-for="i of numOfPages" :key="i" class="page-item" :class="currentPage===i? 'active':''">
+        <a class="page-link" href="#" @click="getTodos(i)">{{i}}</a>
+      </li>
+      <li class="page-item" v-if="numOfPages !== currentPage">
+        <a class="page-link" href="#"  @click="getTodos(currentPage + 1)">Next</a>
+      </li>
+    </ul>
+  </nav>
 </div>
 </template>
 
@@ -25,16 +42,23 @@ export default {
   setup() {
       const todos = ref([]);
       const error = ref('');
+      const numOfTodos = ref(0)
+      const currentPage = ref(1)
+      const limit = 5
 
-      const getTodos = async() => {
-        error.value = ''
+      const numOfPages = computed(()=> {
+        return Math.ceil(numOfTodos.value/limit)
+      })
+
+      const getTodos = async(page = currentPage.value) => {
+        currentPage.value = page
+
         try {
-          const res = await axios.get('http://localhost:3000/todos')
-          console.log(res.data)
+          const res = await axios.get(`http://localhost:3000/todos?_page=${page}&_limit=${limit}`)
+          numOfTodos.value = res.headers['x-total-count']
           todos.value = res.data
         } catch (err) {
           console.log(err)
-          error.value = 'Oops Something went wrong!'
         }
       }
       getTodos()
@@ -92,11 +116,14 @@ export default {
       return {
           todos,
           addTodo,
+          getTodos,
           toggleTodo,
           deleteTodo,
           searchText,
           filteredTodos,
-          error
+          error,
+          numOfPages,
+          currentPage
       };
   },
 }
@@ -119,7 +146,8 @@ export default {
   color: rgb(66, 66, 221);
 }
 
-.card-text {
+.card-text,
+.page-link {
   cursor: pointer;
 }
 </style>
