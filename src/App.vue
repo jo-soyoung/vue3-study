@@ -6,10 +6,10 @@
 
   <TodoForm @add-todo="addTodo"/>
   <strong style="color: red">{{error}}</strong>
-  <p v-if="!filteredTodos.length">You have nothing to do.</p>
+  <p v-if="!todos.length">You have nothing to do.</p>
 
   <TodoList
-    :todos="filteredTodos" @toggle-todo="toggleTodo" @delete-todo="deleteTodo" />
+    :todos="todos" @toggle-todo="toggleTodo" @delete-todo="deleteTodo" />
   <hr/>
 
   <nav aria-label="Page navigation example">
@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import {ref, computed} from 'vue';
+import {ref, computed, watch} from 'vue';
 import TodoForm from './components/TodoForm.vue'
 import TodoList from './components/TodoList.vue'
 import axios from 'axios'
@@ -45,6 +45,7 @@ export default {
       const numOfTodos = ref(0)
       const currentPage = ref(1)
       const limit = 5
+      const searchText = ref('')
 
       const numOfPages = computed(()=> {
         return Math.ceil(numOfTodos.value/limit)
@@ -54,7 +55,7 @@ export default {
         currentPage.value = page
 
         try {
-          const res = await axios.get(`http://localhost:3000/todos?_page=${page}&_limit=${limit}`)
+          const res = await axios.get(`http://localhost:3000/todos?subject_like=${searchText.value}&_page=${page}&_limit=${limit}`)
           numOfTodos.value = res.headers['x-total-count']
           todos.value = res.data
         } catch (err) {
@@ -103,14 +104,8 @@ export default {
         todos.value.splice(index, 1);
       };
 
-      const searchText = ref('')
-      const filteredTodos = computed(() => {
-        if (searchText.value) {
-          return todos.value.filter(todo => {
-            return todo.subject.includes(searchText.value)
-          })
-        } 
-        return todos.value;
+      watch(searchText, () => {
+        getTodos(1) // 첫번째 페이지 보여주기
       })
 
       return {
@@ -120,7 +115,6 @@ export default {
           toggleTodo,
           deleteTodo,
           searchText,
-          filteredTodos,
           error,
           numOfPages,
           currentPage
