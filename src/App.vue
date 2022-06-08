@@ -55,7 +55,7 @@ export default {
         currentPage.value = page
 
         try {
-          const res = await axios.get(`http://localhost:3000/todos?subject_like=${searchText.value}&_page=${page}&_limit=${limit}`)
+          const res = await axios.get(`http://localhost:3000/todos?_sort=id&_order=desc&subject_like=${searchText.value}&_page=${page}&_limit=${limit}`)
           numOfTodos.value = res.headers['x-total-count']
           todos.value = res.data
         } catch (err) {
@@ -72,7 +72,7 @@ export default {
           subject: todo.subject,
           completed: todo.completed
           })
-          todos.value.push(todo)
+          getTodos(1)
         } catch (err) {
           console.log(err)
           error.value = 'Oops Something went wrong!'
@@ -97,6 +97,7 @@ export default {
         const id = todos.value[index].id
         try {
           await axios.delete('http://localhost:3000/todos/' + id)
+          getTodos(1)
         } catch (err) {
           console.log(err)
           error.value = 'Oops Something went wrong!'
