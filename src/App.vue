@@ -1,7 +1,7 @@
 <template>
 <div class="container">
   <h1 class="todo-title">투두리스트</h1>
-  <input type="text" class="form-control" v-model="searchText" placeholder="Seach">
+  <input type="text" class="form-control" v-model="searchText" placeholder="Seach" @keyup.enter="searchTodo">
   <hr/>
 
   <TodoForm @add-todo="addTodo"/>
@@ -105,8 +105,15 @@ export default {
         todos.value.splice(index, 1);
       };
 
+      let timeout = null
+      const searchTodo = () => {
+        clearTimeout(timeout)
+        getTodos(1)
+      }
       watch(searchText, () => {
-        getTodos(1) // 첫번째 페이지 보여주기
+        timeout = setTimeout(()=>{
+         getTodos(1) // 첫번째 페이지 보여주기
+        }, 1000) 
       })
 
       return {
@@ -115,6 +122,7 @@ export default {
           getTodos,
           toggleTodo,
           deleteTodo,
+          searchTodo,
           searchText,
           error,
           numOfPages,
