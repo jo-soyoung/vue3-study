@@ -1,33 +1,31 @@
 <template>
 <div>
   <router-view/>
-  <div class="container">
-    <h1 class="todo-title">투두리스트</h1>
-    <input type="text" class="form-control" v-model="searchText" placeholder="Seach" @keyup.enter="searchTodo">
-    <hr/>
+  <h1 class="todo-title">투두리스트</h1>
+  <input type="text" class="form-control" v-model="searchText" placeholder="Seach" @keyup.enter="searchTodo">
+  <hr/>
 
-    <TodoForm @add-todo="addTodo"/>
-    <strong style="color: red">{{error}}</strong>
-    <p v-if="!todos.length">You have nothing to do.</p>
+  <TodoForm @add-todo="addTodo"/>
+  <strong style="color: red">{{error}}</strong>
+  <p v-if="!todos.length">You have nothing to do.</p>
 
-    <TodoList
-      :todos="todos" @toggle-todo="toggleTodo" @delete-todo="deleteTodo" />
-    <hr/>
+  <TodoList
+    :todos="todos" @toggle-todo="toggleTodo" @delete-todo="deleteTodo" />
+  <hr/>
 
-    <nav aria-label="Page navigation example">
-      <ul class="pagination">
-        <li class="page-item" v-if="currentPage !== 1">
-          <a class="page-link" href="#" @click="getTodos(currentPage - 1)">Previous</a>
-        </li>
-        <li v-for="i of numOfPages" :key="i" class="page-item" :class="currentPage===i? 'active':''">
-          <a class="page-link" href="#" @click="getTodos(i)">{{i}}</a>
-        </li>
-        <li class="page-item" v-if="numOfPages !== currentPage">
-          <a class="page-link" href="#"  @click="getTodos(currentPage + 1)">Next</a>
-        </li>
-      </ul>
-    </nav>
-  </div>
+  <nav aria-label="Page navigation example">
+    <ul class="pagination">
+      <li class="page-item" v-if="currentPage !== 1">
+        <a class="page-link" href="#" @click="getTodos(currentPage - 1)">Previous</a>
+      </li>
+      <li v-for="i of numOfPages" :key="i" class="page-item" :class="currentPage===i? 'active':''">
+        <a class="page-link" href="#" @click="getTodos(i)">{{i}}</a>
+      </li>
+      <li class="page-item" v-if="numOfPages !== currentPage">
+        <a class="page-link" href="#"  @click="getTodos(currentPage + 1)">Next</a>
+      </li>
+    </ul>
+  </nav>
 </div>
 </template>
 
