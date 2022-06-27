@@ -1,6 +1,4 @@
 <template>
-    <h1> Todo Page </h1>
-
     <div v-if="loading">Loading...</div>
 
     <form
