@@ -37,6 +37,7 @@ import axios from 'axios'
 import TodoForm from '@/components/TodoForm.vue'
 import TodoList from '@/components/TodoList.vue'
 import Toast from '@/components/Toast.vue'
+import { useToast } from '@/composables/toast'
 
 export default {
   components: {
@@ -51,6 +52,13 @@ export default {
       const currentPage = ref(1)
       const limit = 5
       const searchText = ref('')
+
+      const {        
+        showToast,
+        toastMessage,
+        toastAlertType,
+        triggerToast
+      } = useToast()
 
       const numOfPages = computed(()=> {
         return Math.ceil(numOfTodos.value/limit)
@@ -124,26 +132,6 @@ export default {
         }, 1000) 
       })
 
-      // Toast
-      const showToast = ref(false);
-      const toastMessage = ref('');
-      const toastAlertType = ref('');
-      const toastTimeout = ref(null)
-      const triggerToast = (message, type = 'success') => {
-          showToast.value = true
-          toastMessage.value = message
-          toastAlertType.value = type
-          toastTimeout.value = setTimeout(()=>{
-              toastMessage.value = '';
-              toastAlertType.value = ''
-              showToast.value = false
-          }, 3000)
-      }
-
-      onUnmounted(() => {
-          clearTimeout(toastTimeout.value)
-      })
-
       return {
           todos,
           addTodo,
@@ -159,7 +147,7 @@ export default {
           toastMessage,
           toastAlertType,
           triggerToast,
-      };
+      }
   },
 }
 </script>

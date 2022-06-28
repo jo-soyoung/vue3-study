@@ -48,6 +48,7 @@ import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
 import _ from 'lodash';
 import Toast from '@/components/Toast.vue';
+import { useToast } from '@/composables/toast'
 
 export default {
     components: {
@@ -60,10 +61,13 @@ export default {
         const todo = ref(null);
         const originalTodo = ref(null);
         const loading = ref(true);
-        const showToast = ref(false);
-        const toastMessage = ref('');
-        const toastAlertType = ref('');
-        const timeout = ref(null)
+
+        const {        
+            showToast,
+            toastMessage,
+            toastAlertType,
+            triggerToast
+        } = useToast()
 
         const todoUpdated = computed(()=>{
             return !_.isEqual(todo.value, originalTodo.value)
@@ -107,21 +111,6 @@ export default {
                 triggerToast('Something went wrong', 'danger')
             }
         }
-
-        const triggerToast = (message, type = 'success') => {
-            showToast.value = true
-            toastMessage.value = message
-            toastAlertType.value = type
-            timeout.value = setTimeout(()=>{
-                toastMessage.value = '';
-                toastAlertType.value = ''
-                showToast.value = false
-            }, 3000)
-        }
-
-        onUnmounted(() => {
-            clearTimeout(timeout.value)
-        })
 
         return {
             todo,
