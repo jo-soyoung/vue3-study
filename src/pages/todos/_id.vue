@@ -43,10 +43,10 @@
 </template>
 
 <script>
-import { ref, computed, trigger } from '@vue/reactivity'
+import { ref, computed, onUnmounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
 import _ from 'lodash';
-import { useRoute, useRouter } from 'vue-router';
 import Toast from '@/components/Toast.vue';
 
 export default {
@@ -57,13 +57,13 @@ export default {
         const route = useRoute();
         const router = useRouter();
         const todoId = route.params.id
-
         const todo = ref(null);
         const originalTodo = ref(null);
         const loading = ref(true);
         const showToast = ref(false);
         const toastMessage = ref('');
         const toastAlertType = ref('');
+        const timeout = ref(null)
 
         const todoUpdated = computed(()=>{
             return !_.isEqual(todo.value, originalTodo.value)
@@ -112,12 +112,16 @@ export default {
             showToast.value = true
             toastMessage.value = message
             toastAlertType.value = type
-            setTimeout(()=>{
+            timeout.value = setTimeout(()=>{
                 toastMessage.value = '';
                 toastAlertType.value = ''
                 showToast.value = false
             }, 3000)
         }
+
+        onUnmounted(() => {
+            clearTimeout(timeout.value)
+        })
 
         return {
             todo,
