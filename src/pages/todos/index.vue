@@ -27,22 +27,26 @@
     </ul>
   </nav>
 </div>
+
+<Toast v-if="showToast" :message="toastMessage" :type="toastAlertType" />
 </template>
 
 <script>
-import {ref, computed, watch} from 'vue';
+import { ref, computed, watch, onUnmounted } from 'vue'
+import axios from 'axios'
 import TodoForm from '@/components/TodoForm.vue'
 import TodoList from '@/components/TodoList.vue'
-import axios from 'axios'
+import Toast from '@/components/Toast.vue'
 
 export default {
   components: {
     TodoForm,
-    TodoList
+    TodoList,
+    Toast,
   },
   setup() {
-      const todos = ref([]);
-      const error = ref('');
+      const todos = ref([])
+      const error = ref('')
       const numOfTodos = ref(0)
       const currentPage = ref(1)
       const limit = 5
@@ -61,6 +65,7 @@ export default {
           todos.value = res.data
         } catch (err) {
           console.log(err)
+          triggerToast('Something went wrong', 'danger')
         }
       }
       getTodos()
@@ -73,10 +78,11 @@ export default {
           subject: todo.subject,
           completed: todo.completed
           })
+          triggerToast('Successfully added!')
           getTodos(1)
         } catch (err) {
           console.log(err)
-          error.value = 'Oops Something went wrong!'
+          triggerToast('Something went wrong', 'danger')
         }
       }
 
@@ -88,7 +94,7 @@ export default {
           })
         } catch (err) {
           console.log(err)
-          error.value = 'Oops Something went wrong!'
+          triggerToast('Something went wrong', 'danger')
         }
         todos.value[index].completed = checked
       }
@@ -98,12 +104,13 @@ export default {
         const id = todos.value[index].id
         try {
           await axios.delete('http://localhost:3000/todos/' + id)
+          triggerToast('Successfully deleted!')
           getTodos(1)
         } catch (err) {
           console.log(err)
-          error.value = 'Oops Something went wrong!'
+          triggerToast('Something went wrong', 'danger')
         }
-        todos.value.splice(index, 1);
+        todos.value.splice(index, 1)
       };
 
       let timeout = null
@@ -117,6 +124,26 @@ export default {
         }, 1000) 
       })
 
+      // Toast
+      const showToast = ref(false);
+      const toastMessage = ref('');
+      const toastAlertType = ref('');
+      const toastTimeout = ref(null)
+      const triggerToast = (message, type = 'success') => {
+          showToast.value = true
+          toastMessage.value = message
+          toastAlertType.value = type
+          toastTimeout.value = setTimeout(()=>{
+              toastMessage.value = '';
+              toastAlertType.value = ''
+              showToast.value = false
+          }, 3000)
+      }
+
+      onUnmounted(() => {
+          clearTimeout(toastTimeout.value)
+      })
+
       return {
           todos,
           addTodo,
@@ -127,7 +154,11 @@ export default {
           searchText,
           error,
           numOfPages,
-          currentPage
+          currentPage,
+          showToast,
+          toastMessage,
+          toastAlertType,
+          triggerToast,
       };
   },
 }
