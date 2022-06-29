@@ -1,46 +1,181 @@
 <template>
-<form action="" class="d-flex" @submit.prevent="onSubmit">
-    <div class="flex-grow-1 mr-2">
-      <input type="text" class="form-control" v-model="todo" placeholder="Any plan for today?">
-    </div>
-    <div>
-      <button class="btn btn-primary" type="submit">
-        Add
-      </button>
-    </div>
-  </form>
+<div v-if="loading">Loading...</div>
+
+    <form
+        v-else
+        @submit.prevent="onSave"
+    >
+        <div class="row">
+            <div class="col-6 upper">
+                <div class="form-group">
+                    <label>Subject</label>
+                    <input v-model="todo.subject" type="text" class="form-control">
+                    <div v-if="subjectErr" class="text-danger">{{subjectErr}}</div>
+                </div>
+            </div>
+
+            <div v-if="editing" class="col-6">
+                <label>Status</label>
+                <div>
+                    <button
+                        type="button"
+                        class="btn"
+                        :class="todo.completed ? 'btn-success' : 'btn-danger'"
+                        @click="toggleTodoStatus"
+                    >
+                        {{ todo.completed ? 'Completed' : 'Incomplete' }}
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-12">
+              <div class="form-group">
+                <label>Body</label>
+                <textarea v-model="todo.body" name="" class="form-control" cols="30" rows="10" />
+              </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" :disabled="!todoUpdated">
+            {{editing ? 'Update' : 'Create'}}
+        </button>
+        <button
+            class="btn btn-outline-dark cancel-btn"
+            @click="moveToTodoListPage"
+        >
+            Cancel
+        </button>
+    </form>
+
+    <Toast v-if="showToast" :message="toastMessage" :type="toastAlertType" />
 </template>
 
 <script>
-import {ref} from 'vue';
+
+import { ref, computed, onUnmounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router';
+import axios from 'axios';
+import _ from 'lodash';
+import Toast from '@/components/Toast.vue';
+import { useToast } from '@/composables/toast'
 
 export default {
-  emits: ['add-todo'],
-  setup(props, { emit }) {
-        const hasError = ref(false);
-        const todo = ref("");
+    components: {
+        Toast
+    },
+    props: {
+      editing: {
+        type: Boolean,
+        default: false,
+      }
+    },
+    setup(props) {
+        const route = useRoute();
+        const router = useRouter();
+        const todoId = route.params.id
+        const todo = ref({
+          subject: '',
+          completed: false,
+          body: ''
+        });
+        const originalTodo = ref(null);
+        const loading = ref(false);
+        const subjectErr = ref('')
 
-        const onSubmit = () => {
-            if(todo.value === '') {
-                hasError.value = true; 
-            } else {
-                emit('add-todo', {
-                    id: Date.now(),
-                    subject: todo.value,
-                    completed: false,
-                })
-                hasError.value = false;
-                todo.value = "";
+        const {        
+            showToast,
+            toastMessage,
+            toastAlertType,
+            triggerToast
+        } = useToast()
+
+        const todoUpdated = computed(()=>{
+            return !_.isEqual(todo.value, originalTodo.value)
+        })
+
+        const getTodo = async() => {
+            loading.value = true;
+            try {
+            const res = await axios.get(`http://localhost:3000/todos/${todoId}`)
+            todo.value = {... res.data};
+            originalTodo.value = {... res.data};
+            loading.value = false;
+            } catch (err) {
+                loading.value = false;
+                console.log(err)
+                triggerToast('Something went wrong', 'danger')
             }
-        };
+        }
+        if (props.editing) {
+          getTodo()
+        }
+
+        const toggleTodoStatus = () => {
+            todo.value.completed = !todo.value.completed
+        }
+
+        const moveToTodoListPage = () => {
+            router.push({
+                name: 'Todos'
+            })
+        }
+
+        const onSave = async() => {
+          subjectErr.value = ''
+          if(!todo.value.subject) {
+            subjectErr.value="Subject is required. Please type in above."
+            return;
+          }
+
+          try {
+            let res
+            const data = {
+                subject: todo.value.subject,
+                completed: todo.value.completed,
+                body: todo.value.body
+            }
+            if(props.editing){
+              res = await axios.put(`http://localhost:3000/todos/${todoId}`, data)
+            } else {
+              res = await axios.post(`http://localhost:3000/todos`, data)
+              todo.value.subject=''
+              todo.value.body=''
+            }
+
+              originalTodo.value = {...res.data}
+              const msg = `Successfully ${props.editing? 'updated' : 'created'}!`
+              triggerToast(msg)
+          } catch (err) {
+              console.log(err)
+              triggerToast('Something went wrong', 'danger')
+          }
+        }
 
         return {
             todo,
-            hasError,
-            onSubmit,
+            loading,
+            showToast,
+            toastMessage,
+            toastAlertType,
+            subjectErr,
+            todoUpdated,
+            toggleTodoStatus,
+            moveToTodoListPage,
+            onSave,
+            triggerToast
         }
     }
 }
 </script>
 
-<style></style>
+<style>
+.upper {
+    margin-bottom: 20px;
+}
+.cancel-btn {
+    margin-left: 2px;
+}
+.form-group {
+  margin-bottom: 12px;
+}
+</style>

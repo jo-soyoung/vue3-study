@@ -1,11 +1,14 @@
 <template>
 <div>
-  <router-view/>
-  <h1 class="todo-title">투두리스트</h1>
+  <!-- <router-view/> -->
+  <div class="d-flex justify-content-between header">
+    <h1 class="todo-title">투두리스트</h1>
+    <button class="btn btn-primary" @click="moveToCreatePage">Create Todo</button>
+  </div>
+
   <input type="text" class="form-control" v-model="searchText" placeholder="Seach" @keyup.enter="searchTodo">
   <hr/>
 
-  <TodoForm @add-todo="addTodo"/>
   <strong style="color: red">{{error}}</strong>
   <p v-if="!todos.length">You have nothing to do.</p>
 
@@ -34,24 +37,30 @@
 <script>
 import { ref, computed, watch, onUnmounted } from 'vue'
 import axios from 'axios'
-import TodoForm from '@/components/TodoForm.vue'
 import TodoList from '@/components/TodoList.vue'
 import Toast from '@/components/Toast.vue'
 import { useToast } from '@/composables/toast'
+import { useRouter } from 'vue-router'
 
 export default {
   components: {
-    TodoForm,
     TodoList,
     Toast,
   },
   setup() {
+      const router = useRouter()
       const todos = ref([])
       const error = ref('')
       const numOfTodos = ref(0)
       const currentPage = ref(1)
       const limit = 5
       const searchText = ref('')
+
+      const moveToCreatePage = () => {
+        router.push({
+          name: 'TodoCreate'
+        })
+      }
 
       const {        
         showToast,
@@ -147,6 +156,7 @@ export default {
           toastMessage,
           toastAlertType,
           triggerToast,
+          moveToCreatePage,
       }
   },
 }
@@ -167,6 +177,10 @@ export default {
   font-size: 50px;
   font-weight: 600;
   color: rgb(66, 66, 221);
+}
+
+.header {
+  margin-bottom: 12px;
 }
 
 .card-text,
