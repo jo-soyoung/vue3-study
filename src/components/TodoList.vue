@@ -3,7 +3,7 @@
     <li class="card-body d-flex align-center p-2"  @click="moveToPage(t.id)">
       <label :for="t.id" class="card-text" :class="{doneTodo: t.completed}" >
         <input type="checkbox" class="form-input-check" :id="t.id" :value="t.completed" @change="toggleTodo(index, $event)" @click.stop>
-        {{t.subject}}
+        <span class="checkbox-text">{{t.subject}}</span>
       </label>
       <div>
         <button class="btn btn-danger btn-sm" @click.stop="deleteTodo(index)">Delete</button>
@@ -55,5 +55,9 @@ export default {
 .card-body {
     justify-content: space-between;
     cursor: pointer;
+}
+.checkbox-text {
+  display: inline-block;
+  margin-left: 8px;
 }
 </style>

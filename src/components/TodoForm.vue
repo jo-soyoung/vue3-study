@@ -1,53 +1,54 @@
 <template>
-<div v-if="loading">Loading...</div>
-
-    <form
-        v-else
-        @submit.prevent="onSave"
-    >
-        <div class="row">
-            <div class="col-6 upper">
-                <div class="form-group">
-                    <label>Subject</label>
-                    <input v-model="todo.subject" type="text" class="form-control">
-                    <div v-if="subjectErr" class="text-danger">{{subjectErr}}</div>
-                </div>
-            </div>
-
-            <div v-if="editing" class="col-6">
-                <label>Status</label>
-                <div>
-                    <button
-                        type="button"
-                        class="btn"
-                        :class="todo.completed ? 'btn-success' : 'btn-danger'"
-                        @click="toggleTodoStatus"
-                    >
-                        {{ todo.completed ? 'Completed' : 'Incomplete' }}
-                    </button>
-                </div>
-            </div>
-
-            <div class="col-12">
+  <div v-if="loading">Loading...</div>
+  <form
+      v-else
+      @submit.prevent="onSave"
+  >
+      <div class="row">
+          <div class="col-6 upper">
               <div class="form-group">
-                <label>Body</label>
-                <textarea v-model="todo.body" name="" class="form-control" cols="30" rows="10" />
+                  <label>Subject</label>
+                  <input v-model="todo.subject" type="text" class="form-control">
+                  <div v-if="subjectErr" class="text-danger">{{subjectErr}}</div>
               </div>
+          </div>
+
+          <div v-if="editing" class="col-6">
+              <label>Status</label>
+              <div>
+                  <button
+                      type="button"
+                      class="btn"
+                      :class="todo.completed ? 'btn-success' : 'btn-danger'"
+                      @click="toggleTodoStatus"
+                  >
+                      {{ todo.completed ? 'Completed' : 'Incomplete' }}
+                  </button>
+              </div>
+          </div>
+
+          <div class="col-12">
+            <div class="form-group">
+              <label>Body</label>
+              <textarea v-model="todo.body" name="" class="form-control" cols="30" rows="10" />
             </div>
-        </div>
+          </div>
+      </div>
 
-        <button type="submit" class="btn btn-primary" :disabled="!todoUpdated">
-            {{editing ? 'Update' : 'Create'}}
-        </button>
-        <button
-            class="btn btn-outline-dark cancel-btn"
-            @click="moveToTodoListPage"
-        >
-            Cancel
-        </button>
-    </form>
+      <button type="submit" class="btn btn-primary" :disabled="!todoUpdated">
+          {{editing ? 'Update' : 'Create'}}
+      </button>
+      <button
+          class="btn btn-outline-dark cancel-btn"
+          @click="moveToTodoListPage"
+      >
+          Cancel
+      </button>
+  </form>
 
+<transition name="fade">
     <Toast v-if="showToast" :message="toastMessage" :type="toastAlertType" />
+</transition>
 </template>
 
 <script>
@@ -177,5 +178,20 @@ export default {
 }
 .form-group {
   margin-bottom: 12px;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: all 0.5s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+    transform: translateY(-30px);
+}
+.fade-enter-to,
+.fade-leave-from {
+    opacity: 1;
+    transform: translateY(0px);
 }
 </style>

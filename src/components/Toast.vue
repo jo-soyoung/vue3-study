@@ -23,8 +23,8 @@ export default {
 
 <style>
 .toast-box {
-    position: fixed;
-    top: 0;
-    right: 0;
+    position: fixed !important;
+    top: 0 !important;
+    right: 0 !important;
 }
 </style>
