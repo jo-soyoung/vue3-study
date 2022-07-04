@@ -116,9 +116,9 @@ export default {
         todos.value[index].completed = checked
       }
 
-      const deleteTodo = async(index) => {
+      const deleteTodo = async(id) => {
         error.value = ''
-        const id = todos.value[index].id
+        
         try {
           await axios.delete('http://localhost:3000/todos/' + id)
           triggerToast('Successfully deleted!')
@@ -127,7 +127,7 @@ export default {
           console.log(err)
           triggerToast('Something went wrong', 'danger')
         }
-        todos.value.splice(index, 1)
+        todos.value.splice(id, 1)
       };
 
       let timeout = null

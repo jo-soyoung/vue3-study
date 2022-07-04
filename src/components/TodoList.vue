@@ -6,12 +6,12 @@
         <span class="checkbox-text">{{t.subject}}</span>
       </label>
       <div>
-        <button class="btn btn-danger btn-sm" @click.stop="openModal(index)">Delete</button>
+        <button class="btn btn-danger btn-sm" @click.stop="openModal(t.id)">Delete</button>
       </div>
     </li>
   </ul>
 
-  <Modal v-if="showModal" @close="closeModal"/>
+  <Modal v-if="showModal" @close="closeModal" @delete="deleteTodo" />
 </template>
 
 <script>
@@ -43,13 +43,14 @@ export default {
         showModal.value = true
         todoDeleteId.value = id
       }
-      const closeModal = (id) =>{
+      const closeModal = () =>{
         showModal.value = false
         todoDeleteId.value = null
       }
 
-      const deleteTodo= (index) => {
-          emit('delete-todo', index)
+      const deleteTodo = () => {
+        emit('delete-todo', todoDeleteId.value)
+        closeModal()
       }
 
       const moveToPage = (todoId) => {
