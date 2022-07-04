@@ -3,17 +3,18 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Delete todo</h5>
+          <h5 class="modal-title">
+            <slot name="title"></slot>
+          </h5>
           <button type="button" class="close" aria-label="Close">
             <span aria-hidden="true" @click="onClose">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-          Are you sure to delete this?
+            <slot name="body"></slot>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" @click="onClose">Close</button>
-          <button type="button" class="btn btn-danger" @click="onDelete">Delete</button>
+            <slot name="footer"></slot>
         </div>
       </div>
     </div>
@@ -24,18 +25,13 @@
 export default {
   setup(props, {emit}) {
     const onClose = () => {
-      emit('close')
-    }
-    const onDelete = () => {
-      emit('delete')
+        emit('close')
     }
 
     return {
-      onClose,
-      onDelete,
+      onClose
     }
   }
-
 }
 </script>
 

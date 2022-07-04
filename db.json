@@ -21,11 +21,6 @@
       "id": 8
     },
     {
-      "subject": "4",
-      "completed": false,
-      "id": 9
-    },
-    {
       "subject": "5",
       "completed": false,
       "id": 10
@@ -39,17 +34,6 @@
       "subject": "1234",
       "completed": false,
       "id": 15
-    },
-    {
-      "subject": "12345",
-      "completed": false,
-      "id": 16
-    },
-    {
-      "subject": "visit 15 degree",
-      "completed": false,
-      "body": "get jamon! or... just sausage..? hmmm",
-      "id": 20
     }
   ]
 }

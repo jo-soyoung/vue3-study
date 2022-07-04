@@ -11,13 +11,26 @@
     </li>
   </ul>
 
-  <Modal v-if="showModal" @close="closeModal" @delete="deleteTodo" />
+
+  <teleport to='#modal'>
+    <Modal v-if="showModal" @close="closeModal" @delete="deleteTodo">
+      <template v-slot:title>
+        Delete todo
+      </template>
+      <template v-slot:body>
+        Are you sure to delete this?
+      </template>
+      <template v-slot:footer>
+        Delete
+      </template>
+    </Modal>
+  </teleport>
 </template>
 
 <script>
 import { ref } from 'vue';
 import {useRouter} from 'vue-router';
-import Modal from '@/components/Modal.vue'
+import Modal from '@/components/DeleteModal.vue'
 
 export default {
   components: {
