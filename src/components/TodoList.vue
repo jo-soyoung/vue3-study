@@ -6,16 +6,23 @@
         <span class="checkbox-text">{{t.subject}}</span>
       </label>
       <div>
-        <button class="btn btn-danger btn-sm" @click.stop="deleteTodo(index)">Delete</button>
+        <button class="btn btn-danger btn-sm" @click.stop="openModal(index)">Delete</button>
       </div>
     </li>
   </ul>
+
+  <Modal v-if="showModal" @close="closeModal"/>
 </template>
 
 <script>
+import { ref } from 'vue';
 import {useRouter} from 'vue-router';
+import Modal from '@/components/Modal.vue'
 
 export default {
+  components: {
+    Modal
+  },
     props: {
         todos: {
             type: Array,
@@ -24,10 +31,21 @@ export default {
     },
     emits: ["toggle-todo", "delete-todo"],
     setup(props, { emit }) {
-      const router = useRouter();
+      const router = useRouter()
+      const showModal = ref(false)
+      const todoDeleteId = ref(null)
 
       const toggleTodo = (index, event) => {
           emit('toggle-todo', index, event.target.checked)
+      }
+
+      const openModal = (id) =>{
+        showModal.value = true
+        todoDeleteId.value = id
+      }
+      const closeModal = (id) =>{
+        showModal.value = false
+        todoDeleteId.value = null
       }
 
       const deleteTodo= (index) => {
@@ -39,9 +57,12 @@ export default {
       }
 
       return {
+          openModal,
+          closeModal,
           toggleTodo,
           deleteTodo,
-          moveToPage
+          moveToPage,
+          showModal,
       }
     }
 }
