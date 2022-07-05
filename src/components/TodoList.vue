@@ -1,28 +1,22 @@
 <template>
-  <ul v-for="(t, index) in todos" :key="t.id" class="card mt-2">
-    <li class="card-body d-flex align-center p-2"  @click="moveToPage(t.id)">
-      <label :for="t.id" class="card-text" :class="{doneTodo: t.completed}" >
-        <input type="checkbox" class="form-input-check" :id="t.id" :value="t.completed" @change="toggleTodo(index, $event)" @click.stop>
-        <span class="checkbox-text">{{t.subject}}</span>
-      </label>
-      <div>
-        <button class="btn btn-danger btn-sm" @click.stop="openModal(t.id)">Delete</button>
-      </div>
-    </li>
-  </ul>
+  <List :items="todos">
+    <template #default="{item, index}">
+      <li class="card-body d-flex align-center p-2"  @click="moveToPage(item.id)">
+        <label :for="item.id" class="card-text" :class="{doneTodo: item.completed}" >
+          <input type="checkbox" class="form-input-check" :id="item.id" :value="item.completed" @change="toggleTodo(index, $event)" @click.stop>
+          <span class="checkbox-text">{{item.subject}}</span>
+        </label>
+        <div>
+          <button class="btn btn-danger btn-sm" @click.stop="openModal(item.id)">Delete</button>
+        </div>
+      </li>
+    </template>
+  </List>
 
 
   <teleport to='#modal'>
     <Modal v-if="showModal" @close="closeModal" @delete="deleteTodo">
-      <template v-slot:title>
-        Delete todo
-      </template>
-      <template v-slot:body>
-        Are you sure to delete this?
-      </template>
-      <template v-slot:footer>
-        Delete
-      </template>
+
     </Modal>
   </teleport>
 </template>
@@ -31,10 +25,12 @@
 import { ref } from 'vue';
 import {useRouter} from 'vue-router';
 import Modal from '@/components/DeleteModal.vue'
+import List from '@/components/List.vue'
 
 export default {
   components: {
-    Modal
+    Modal,
+    List
   },
     props: {
         todos: {
