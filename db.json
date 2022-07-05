@@ -42,7 +42,7 @@
     },
     {
       "subject": "purchase teawares",
-      "completed": false,
+      "completed": true,
       "body": "",
       "id": 18
     }

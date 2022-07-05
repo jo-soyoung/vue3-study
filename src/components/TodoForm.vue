@@ -6,11 +6,11 @@
   >
       <div class="row">
           <div class="col-6 upper">
-              <div class="form-group">
-                  <label>Subject</label>
-                  <input v-model="todo.subject" type="text" class="form-control">
-                  <div v-if="subjectErr" class="text-danger">{{subjectErr}}</div>
-              </div>
+            <Input
+                v-model:subject="todo.subject"
+                label="Subject"
+                :error="subjectErr"
+            />
           </div>
 
           <div v-if="editing" class="col-6">
@@ -53,16 +53,18 @@
 
 <script>
 
-import { ref, computed, onUnmounted } from 'vue'
+import { ref, computed, onUnmounted, onUpdated } from 'vue'
 import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
 import _ from 'lodash';
-import Toast from '@/components/Toast.vue';
 import { useToast } from '@/composables/toast'
+import Toast from '@/components/Toast.vue';
+import Input from '@/components/Input.vue'
 
 export default {
     components: {
-        Toast
+        Toast,
+        Input,
     },
     props: {
       editing: {
@@ -71,6 +73,9 @@ export default {
       }
     },
     setup(props) {
+        onUpdated(()=>{
+            console.log(todo.value.subject)
+        })
         const route = useRoute();
         const router = useRouter();
         const todoId = route.params.id
@@ -163,7 +168,7 @@ export default {
             toggleTodoStatus,
             moveToTodoListPage,
             onSave,
-            triggerToast
+            triggerToast,
         }
     }
 }
