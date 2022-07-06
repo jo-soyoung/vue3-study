@@ -36,7 +36,7 @@
 
 <script>
 import { ref, computed, watch, onUnmounted } from 'vue'
-import axios from 'axios'
+import axios from '@/axios'
 import TodoList from '@/components/TodoList.vue'
 import Toast from '@/components/Toast.vue'
 import { useToast } from '@/composables/toast'
