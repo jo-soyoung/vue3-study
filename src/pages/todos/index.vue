@@ -77,7 +77,7 @@ export default {
         currentPage.value = page
 
         try {
-          const res = await axios.get(`http://localhost:3000/todos?_sort=id&_order=desc&subject_like=${searchText.value}&_page=${page}&_limit=${limit}`)
+          const res = await axios.get(`todos?_sort=id&_order=desc&subject_like=${searchText.value}&_page=${page}&_limit=${limit}`)
           numOfTodos.value = res.headers['x-total-count']
           todos.value = res.data
         } catch (err) {
@@ -91,7 +91,7 @@ export default {
         // DB에 TODO 저장
         error.value = ''
         try {
-          await axios.post('http://localhost:3000/todos', {
+          await axios.post('todos', {
           subject: todo.subject,
           completed: todo.completed
           })
@@ -106,7 +106,7 @@ export default {
       const toggleTodo = async(index, checked) => {
         const id = todos.value[index].id
         try {
-          await axios.patch('http://localhost:3000/todos/' + id, {
+          await axios.patch('todos/' + id, {
             completed: checked
           })
         } catch (err) {
@@ -120,7 +120,7 @@ export default {
         error.value = ''
         
         try {
-          await axios.delete('http://localhost:3000/todos/' + id)
+          await axios.delete('todos/' + id)
           triggerToast('Successfully deleted!')
           getTodos(1)
         } catch (err) {

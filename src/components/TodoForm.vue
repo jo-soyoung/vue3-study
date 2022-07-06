@@ -55,7 +55,7 @@
 
 import { ref, computed, onUnmounted, onUpdated } from 'vue'
 import { useRoute, useRouter } from 'vue-router';
-import axios from 'axios';
+import axios from '@/axios';
 import _ from 'lodash';
 import { useToast } from '@/composables/toast'
 import Toast from '@/components/Toast.vue';
@@ -102,7 +102,7 @@ export default {
         const getTodo = async() => {
             loading.value = true;
             try {
-            const res = await axios.get(`http://localhost:3000/todos/${todoId}`)
+            const res = await axios.get(`todos/${todoId}`)
             todo.value = {... res.data};
             originalTodo.value = {... res.data};
             loading.value = false;
@@ -141,9 +141,9 @@ export default {
                 body: todo.value.body
             }
             if(props.editing){
-              res = await axios.put(`http://localhost:3000/todos/${todoId}`, data)
+              res = await axios.put(`${todoId}`, data)
             } else {
-              res = await axios.post(`http://localhost:3000/todos`, data)
+              res = await axios.post('todos', data)
               todo.value.subject=''
               todo.value.body=''
             }
