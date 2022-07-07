@@ -151,6 +151,12 @@ export default {
               originalTodo.value = {...res.data}
               const msg = `Successfully ${props.editing? 'updated' : 'created'}!`
               triggerToast(msg)
+
+              if(!props.editing) {
+                router.push({
+                    name: 'Todos'
+                })
+              }
           } catch (err) {
               console.log(err)
               triggerToast('Something went wrong', 'danger')
