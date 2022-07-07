@@ -34,6 +34,15 @@ export default {
         toastAlertType,
         triggerToast
     } = useToast()
+
+    console.log(showToast.value)
+
+    return {
+        showToast,
+        toastMessage,
+        toastAlertType,
+        triggerToast
+    }
   }
 }
 </script>

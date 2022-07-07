@@ -1,11 +1,16 @@
-import { ref, onUnmounted } from 'vue'
+import { ref, onUnmounted, computed } from 'vue'
+import { useStore } from 'vuex'
 
 export const useToast = () => {
-    const showToast = ref(false);
-    const toastMessage = ref('');
-    const toastAlertType = ref('');
-    const toastTimeout = ref(null)
+    const store = useStore()
+
+    const toastMessage = computed(() => store.state.toastMessage)
+    const showToast = computed(() => store.state.showToast)
+    const toastAlertType = computed(() => store.state.toastAlertType)
+    const toastTimeout = computed(() => store.state.toastTimeout)
+
     const triggerToast = (message, type = 'success') => {
+        // TODO: vuex의 state를 바꾸고 싶다면 mutation을 쓴다
         showToast.value = true
         toastMessage.value = message
         toastAlertType.value = type
