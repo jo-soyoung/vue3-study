@@ -3,7 +3,7 @@ import { useStore } from 'vuex'
 
 export const useToast = () => {
     const store = useStore()
-    const toastMessage = computed(() => store.state.toastMessage)
+    const toastMessage = computed(() => store.getters.toastMessageWithSmile)
     const showToast = computed(() => store.state.showToast)
     const toastAlertType = computed(() => store.state.toastAlertType)
     const toastTimeout = computed(() => store.state.toastTimeout)
