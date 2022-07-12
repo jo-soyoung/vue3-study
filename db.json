@@ -29,34 +29,10 @@
       "id": 15
     },
     {
-      "subject": "book air tickets",
+      "subject": "testset",
       "completed": false,
       "body": "",
       "id": 16
-    },
-    {
-      "subject": "go spain",
-      "completed": false,
-      "body": "",
-      "id": 17
-    },
-    {
-      "subject": "purchase teawares",
-      "completed": true,
-      "body": "",
-      "id": 18
-    },
-    {
-      "subject": "test",
-      "completed": false,
-      "body": "test",
-      "id": 20
-    },
-    {
-      "subject": "test",
-      "completed": false,
-      "body": "",
-      "id": 21
     }
   ]
 }
