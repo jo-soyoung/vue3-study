@@ -16,7 +16,7 @@
     <router-view/>
   </div>
 
-  <Toast v-if="showToast" message="joa" :type="toastAlertType" />
+  <Toast v-if="showToast" :message="toastMessage" :type="toastAlertType" />
 </div>
 </template>
 
@@ -34,8 +34,6 @@ export default {
         toastAlertType,
         triggerToast
     } = useToast()
-
-    console.log(showToast.value)
 
     return {
         showToast,

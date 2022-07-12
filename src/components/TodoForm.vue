@@ -73,9 +73,9 @@ export default {
       }
     },
     setup(props) {
-        onUpdated(()=>{
-            console.log(todo.value.subject)
-        })
+        // onUpdated(()=>{
+        //     console.log(todo.value.subject)
+        // })
         const route = useRoute();
         const router = useRouter();
         const todoId = route.params.id
