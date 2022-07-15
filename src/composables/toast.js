@@ -6,7 +6,7 @@ export const useToast = () => {
     const toasts = computed(() => store.state.toast.toasts)
 
     const triggerToast = (message, type = 'success') => {
-        store.dispatch('toast/triggerToast', message, type)
+        store.dispatch('toast/triggerToast', {message, type})
     }
 
     return {
