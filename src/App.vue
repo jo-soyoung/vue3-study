@@ -1,16 +1,6 @@
 <template>
 <div>
-  <div class="container">
-      <nav class="navbar navbar-expand-lg navbar-light">
-        <router-link class="navbar-brand" to="/">Joa TodoList</router-link>
-
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <router-link class="nav-link" to="/todos">Todos</router-link>
-          </li>
-        </ul>
-    </nav>
-  </div>
+  <Navbar/>
 
   <div class="container">
     <router-view/>
@@ -21,12 +11,14 @@
 </template>
 
 <script>
+import Navbar from '@/components/Navbar.vue'
 import Toast from '@/components/Toast.vue'
 
 export default {
   components:{
-    Toast
-  },
+    Toast,
+    Navbar
+},
 }
 </script>
 

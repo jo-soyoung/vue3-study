@@ -16,19 +16,12 @@
     :todos="todos" @toggle-todo="toggleTodo" @delete-todo="deleteTodo" />
   <hr/>
 
-  <nav aria-label="Page navigation example">
-    <ul class="pagination">
-      <li class="page-item" v-if="currentPage !== 1">
-        <a class="page-link" href="#" @click="getTodos(currentPage - 1)">Previous</a>
-      </li>
-      <li v-for="i of numOfPages" :key="i" class="page-item" :class="currentPage===i? 'active':''">
-        <a class="page-link" href="#" @click="getTodos(i)">{{i}}</a>
-      </li>
-      <li class="page-item" v-if="numOfPages !== currentPage">
-        <a class="page-link" href="#"  @click="getTodos(currentPage + 1)">Next</a>
-      </li>
-    </ul>
-  </nav>
+  <Pagination
+    v-if="todos.length"
+    :currentPage="currentPage"
+    :numOfPages="numOfPages"
+    @click="getTodos"
+  />
 </div>
 
 <Toast v-if="showToast" :message="toastMessage" :type="toastAlertType" />
@@ -39,6 +32,7 @@ import { ref, computed, watch, onUnmounted } from 'vue'
 import axios from '@/axios'
 import TodoList from '@/components/TodoList.vue'
 import Toast from '@/components/Toast.vue'
+import Pagination from '@/components/Pagination.vue'
 import { useToast } from '@/composables/toast'
 import { useRouter } from 'vue-router'
 
@@ -46,6 +40,7 @@ export default {
   components: {
     TodoList,
     Toast,
+    Pagination,
   },
   setup() {
       const router = useRouter()
